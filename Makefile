@@ -1,4 +1,3 @@
-// The final executable that will be built
 TARGET = bin/contact_file
 SRC = $(wildcard src/*.c)
 OBJ = $(patsubst src/%.c, obj/%.o, $(SRC))
