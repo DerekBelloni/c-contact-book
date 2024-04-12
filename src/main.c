@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "common.h"
+
 int main(int argc, char *argv[]) {
     int c;
     char *filepath = NULL;
@@ -19,7 +21,6 @@ int main(int argc, char *argv[]) {
                 break;
             case 'f':
                 filepath = optarg;
-                printf("Filepath: %s\n", filepath);
                 break;
             case 'a':
                 addString = optarg;
@@ -35,6 +36,16 @@ int main(int argc, char *argv[]) {
             default:
                 return -1;
         }
+    }
+
+    if (filepath == NULL) {
+        printf("Filepath is a required argument\n");
+        // call print usage here
+        return 0;
+    }
+
+    if (newFile) {
+        // call function in file.c for creating a new file
     }
 
     return 0;
