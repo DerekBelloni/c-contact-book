@@ -3,16 +3,27 @@
 #include <getopt.h>
 #include <stdlib.h>
 #include <stdbool.h>
+#include <ctype.h>
 
 #include "common.h"
+#include "file.h"
+
+int print_usage(char *argv[]) {
+    printf("Usage: %s -p <filepath> -f <filename>\n", argv[0]);
+    return 1;
+}
 
 int main(int argc, char *argv[]) {
     int c;
+    FILE *fp;
     char *filepath = NULL;
+    char *filename = NULL;
     char *updateString = NULL;
     char *addString = NULL;
     char *removeString = NULL;
     bool newFile = false;
+
+    struct contact_t *contacts = NULL;
 
     while ((c = getopt(argc, argv, "nf:a:u:r:")) != -1) {
         switch(c) {
@@ -40,12 +51,24 @@ int main(int argc, char *argv[]) {
 
     if (filepath == NULL) {
         printf("Filepath is a required argument\n");
-        // call print usage here
+        print_usage(argv);
         return 0;
     }
 
     if (newFile) {
-        // call function in file.c for creating a new file
+        fp = create_contact_file(filepath);
+        if (fp == NULL) {
+            printf("Unable to create new file.\n");
+            fclose(fp);
+            return STATUS_ERROR;
+        }
+    } else {
+        fp = open_contact_file(filepath);
+        if (fp == NULL) {
+            printf("Unable to open file.\n");
+            fclose(fp);
+            return STATUS_ERROR;
+        }
     }
 
     return 0;
