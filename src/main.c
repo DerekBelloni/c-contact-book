@@ -7,6 +7,7 @@
 
 #include "common.h"
 #include "file.h"
+#include "parse.h"
 
 int print_usage(char *argv[]) {
     printf("Usage: %s -p <filepath> -f <filename>\n", argv[0]);
@@ -69,6 +70,10 @@ int main(int argc, char *argv[]) {
             fclose(fp);
             return STATUS_ERROR;
         }
+    }
+
+    if (addString) {
+        add_contact(contacts, addString);
     }
 
     return 0;

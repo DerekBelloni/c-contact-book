@@ -12,7 +12,7 @@ FILE* create_contact_file(char *filepath) {
         return NULL;
     }
 
-    fp = fopen(filepath, "a");
+    fp = fopen(filepath, "w");
     if (fp == NULL) {
         perror("open");
         fclose(fp);
@@ -23,6 +23,15 @@ FILE* create_contact_file(char *filepath) {
 }
 
 FILE* open_contact_file(char *filepath) {
-    printf("file path in open contact file: %s\n", filepath);
+    FILE *fp = NULL;
+    fp = fopen(filepath, "w+a");
+
+    if (fp == NULL) {
+        perror("open");
+        fclose(fp);
+        return NULL;
+    }
+
+    return fp;
 }
 
