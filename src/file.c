@@ -28,7 +28,7 @@ FILE* create_contact_file(char *filepath) {
     return fp;
 }
 
-FILE* open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp) {
+void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp) {
     char line[MAX_LINE_LENGTH];
     int count = 0;
     int i = 0;
@@ -37,10 +37,8 @@ FILE* open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp) 
     if (*fp == NULL) {
         perror("open");
         fclose(*fp);
-        return NULL;
     }
 
-    // iterate over the lines of the file to a count of the number of contacts
     while(fgets(line, sizeof(line), *fp) != NULL) {
         count++;
     }
@@ -51,16 +49,13 @@ FILE* open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp) 
         fclose(*fp);
     }
 
-    // need to reset the file pointer to the beginning of the file
     rewind(*fp);
 
-    //
     while((fgets(line, sizeof(line), *fp)) != NULL) {
         char *name, *email, *phoneNbr = NULL;
         char *token;
         char *line_copy = strdup(line);
 
-        // replace trailing character from the new line if present with a null terminating character
         char *newline = strchr(line, '\n');
         if (newline != NULL) {
             *newline = '\0';
@@ -98,9 +93,5 @@ FILE* open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp) 
 
         i++;
     }
-
-
-    printf("Contact name at index 0: %s\n", contacts[0]->name);
-    return *fp;
 }
 

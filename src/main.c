@@ -71,6 +71,8 @@ int main(int argc, char *argv[]) {
             fclose(fp);
             return STATUS_ERROR;
         }
+
+        printf("Contact name at index 0: %s\n", contacts[0].name);
     }
 
     if (addString) {

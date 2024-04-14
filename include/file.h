@@ -5,6 +5,6 @@
 #include "parse.h"
 
 FILE* create_contact_file(char *filepath);
-FILE* open_contact_file(char *filepath, struct contact_t **, FILE **fp);
+int open_contact_file(char *filepath, struct contact_t **, FILE **fp);
 
 #endif
