@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     char *removeString = NULL;
     bool newFile = false;
 
-    struct contact_t *contacts = NULL;
+    struct contact_t *contacts = malloc(MAX_CONTACTS * sizeof(struct contact_t));
 
     while ((c = getopt(argc, argv, "nf:a:u:r:")) != -1) {
         switch(c) {
@@ -73,7 +73,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (addString) {
-        add_contact(contacts, addString);
+        add_contact(contacts, addString, filepath, fp);
     }
 
     return 0;

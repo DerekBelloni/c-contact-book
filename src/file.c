@@ -24,7 +24,7 @@ FILE* create_contact_file(char *filepath) {
 
 FILE* open_contact_file(char *filepath) {
     FILE *fp = NULL;
-    fp = fopen(filepath, "w+a");
+    fp = fopen(filepath, "a");
 
     if (fp == NULL) {
         perror("open");
