@@ -24,7 +24,7 @@ int main(int argc, char *argv[]) {
     char *removeString = NULL;
     bool newFile = false;
 
-    struct contact_t *contacts = malloc(MAX_CONTACTS * sizeof(struct contact_t));
+    struct contact_t *contacts;
 
     while ((c = getopt(argc, argv, "nf:a:u:r:")) != -1) {
         switch(c) {
@@ -64,7 +64,8 @@ int main(int argc, char *argv[]) {
             return STATUS_ERROR;
         }
     } else {
-        fp = open_contact_file(filepath);
+        open_contact_file(filepath, &contacts, &fp);
+        // null check contacts as well
         if (fp == NULL) {
             printf("Unable to open file.\n");
             fclose(fp);
@@ -73,7 +74,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (addString) {
-        add_contact(contacts, addString, filepath, fp);
+        add_contact(contacts, addString, filepath, &fp);
     }
 
     return 0;

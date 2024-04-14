@@ -7,7 +7,7 @@
 
 #define MAX_FIELD_LENGTH 256
 
-int add_contact(struct contact_t *contacts, char *addstring, char *filepath, FILE *fp) {
+int add_contact(struct contact_t *contacts, char *addstring, char *filepath, FILE **fp) {
     char name[MAX_FIELD_LENGTH], email[MAX_FIELD_LENGTH], phoneNbr[MAX_FIELD_LENGTH];
     char *input = strdup(addstring);
     char *token;
@@ -27,19 +27,22 @@ int add_contact(struct contact_t *contacts, char *addstring, char *filepath, FIL
         strcpy(phoneNbr, token);
     }
 
+    // I will need to set the cursor to the end of the file
+    // I will need to make sure I am saving new contacts to the end the contacts struct
+
     strncpy(contacts->name, name, sizeof(contacts->name));
     strncpy(contacts->email, email, sizeof(contacts->email));
     strncpy(contacts->phoneNbr, phoneNbr, sizeof(contacts->phoneNbr));
 
-    if (fp == NULL) {
+    if (*fp == NULL) {
         perror("open");
-        fclose(fp);
+        fclose(*fp);
         return -1;
     }
 
-    fprintf(fp, "%s,%s,%s\n", contacts->name, contacts->email, contacts->phoneNbr);
+    fprintf(*fp, "%s,%s,%s\n", contacts->name, contacts->email, contacts->phoneNbr);
 
-    fclose(fp);
+    fclose(*fp);
     free(input);
     return 1;
 }
