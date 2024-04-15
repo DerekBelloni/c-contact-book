@@ -10,6 +10,6 @@ struct contact_t {
     char phoneNbr[MAX_FIELD_LENGTH];
 };
 
-int add_contact(struct contact_t *, char *addstring, char *filepath, FILE **fp);
+int add_contact(struct contact_t **, char *addstring, char *filepath, FILE **fp, int *count);
 
 #endif

@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "parse.h"
 
-FILE* create_contact_file(char *filepath);
-int open_contact_file(char *filepath, struct contact_t **, FILE **fp);
+void create_contact_file(char *filepath, FILE **fp);
+void open_contact_file(char *filepath, struct contact_t **, FILE **fp, int *count);
 
 #endif

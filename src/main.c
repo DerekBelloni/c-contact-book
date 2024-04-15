@@ -16,6 +16,7 @@ int print_usage(char *argv[]) {
 
 int main(int argc, char *argv[]) {
     int c;
+    int count = 0;
     FILE *fp;
     char *filepath = NULL;
     char *filename = NULL;
@@ -24,7 +25,7 @@ int main(int argc, char *argv[]) {
     char *removeString = NULL;
     bool newFile = false;
 
-    struct contact_t *contacts;
+    struct contact_t *contacts = NULL;
 
     while ((c = getopt(argc, argv, "nf:a:u:r:")) != -1) {
         switch(c) {
@@ -57,26 +58,24 @@ int main(int argc, char *argv[]) {
     }
 
     if (newFile) {
-        fp = create_contact_file(filepath);
+        create_contact_file(filepath, &fp);
         if (fp == NULL) {
             printf("Unable to create new file.\n");
             fclose(fp);
             return STATUS_ERROR;
         }
     } else {
-        open_contact_file(filepath, &contacts, &fp);
+        open_contact_file(filepath, &contacts, &fp, &count);
         // null check contacts as well
         if (fp == NULL) {
             printf("Unable to open file.\n");
             fclose(fp);
             return STATUS_ERROR;
         }
-
-        printf("Contact name at index 0: %s\n", contacts[0].name);
     }
 
     if (addString) {
-        add_contact(contacts, addString, filepath, &fp);
+        add_contact(&contacts, addString, filepath, &fp, &count);
     }
 
     return 0;

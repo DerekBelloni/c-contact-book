@@ -8,29 +8,26 @@
 
 #define MAX_LINE_LENGTH 771 
 
-FILE* create_contact_file(char *filepath) {
-    FILE *fp = NULL;
-    fp = fopen(filepath, "r");
+// refactor this to be a void type, hand in a pointer to fp (**fp)
+void create_contact_file(char *filepath, FILE **fp) {
+    *fp = fopen(filepath, "r");
 
-    if (fp != NULL) {
+    if (*fp != NULL) {
         printf("A file already exists at the given path.\n");
-        fclose(fp);
-        return NULL;
+        fclose(*fp);
+        return;
     }
 
-    fp = fopen(filepath, "w");
-    if (fp == NULL) {
+    *fp = fopen(filepath, "w");
+    if (*fp == NULL) {
         perror("open");
-        fclose(fp);
-        return NULL;
+        fclose(*fp);
+        return;
     }
-
-    return fp;
 }
 
-void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp) {
+void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, int *count) {
     char line[MAX_LINE_LENGTH];
-    int count = 0;
     int i = 0;
     *fp = fopen(filepath, "r+");
 
@@ -40,10 +37,9 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp) {
     }
 
     while(fgets(line, sizeof(line), *fp) != NULL) {
-        count++;
+        (*count)++;
     }
-
-    *contacts = malloc(count * sizeof(struct contact_t));
+    *contacts = malloc(*count * sizeof(struct contact_t));
     if (*contacts == NULL) {
         perror("malloc");
         fclose(*fp);
@@ -78,19 +74,17 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp) {
 
         if (name != NULL) {
             strncpy(contacts[i]->name, name, MAX_FIELD_LENGTH);
-            free(name);
         }
 
         if (email != NULL) {
             strncpy(contacts[i]->email, email, MAX_FIELD_LENGTH);
-            free(email);
         }
 
         if (phoneNbr != NULL) {
             strncpy(contacts[i]->phoneNbr, phoneNbr, MAX_FIELD_LENGTH);
-            free(phoneNbr);
         }
 
+        free(line_copy);
         i++;
     }
 }

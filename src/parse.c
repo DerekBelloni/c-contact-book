@@ -7,42 +7,50 @@
 
 #define MAX_FIELD_LENGTH 256
 
-int add_contact(struct contact_t *contacts, char *addstring, char *filepath, FILE **fp) {
-    char name[MAX_FIELD_LENGTH], email[MAX_FIELD_LENGTH], phoneNbr[MAX_FIELD_LENGTH];
+int add_contact(struct contact_t **contacts, char *addstring, char *filepath, FILE **fp, int *count) {
+    
+    char *name, *email, *phoneNbr;
     char *input = strdup(addstring);
     char *token;
 
     token = strsep(&input, ",");
     if (token != NULL && token[0] != '\0') {
-        strcpy(name, token);
+        name = strdup(token);
     }
 
     token = strsep(&input, ",");
     if (token != NULL && token[0] != '\0') {
-        strcpy(email, token);
+        email = strdup(token);
     }
 
     token = strsep(&input, ",");
     if (token != NULL && token[0] != '\0') {
-        strcpy(phoneNbr, token);
+        phoneNbr = strdup(token);
     }
 
-    // I will need to set the cursor to the end of the file
-    // I will need to make sure I am saving new contacts to the end the contacts struct
-
-    strncpy(contacts->name, name, sizeof(contacts->name));
-    strncpy(contacts->email, email, sizeof(contacts->email));
-    strncpy(contacts->phoneNbr, phoneNbr, sizeof(contacts->phoneNbr));
-
-    if (*fp == NULL) {
-        perror("open");
-        fclose(*fp);
+    (*count)++;
+    struct contact_t *temp = realloc(*contacts, *count * sizeof(struct contact_t));
+    if (temp == NULL) {
+        perror("Memory reallocation failed");
+        if (*contacts != NULL) {
+            free(*contacts);
+        }
+        free(name);
+        free(email);
+        free(phoneNbr);
+        free(input);
         return -1;
     }
 
-    fprintf(*fp, "%s,%s,%s\n", contacts->name, contacts->email, contacts->phoneNbr);
+    *contacts = temp;
 
-    fclose(*fp);
+    strncpy((*contacts)[*count -1].name, name, MAX_FIELD_LENGTH - 1);
+    strncpy((*contacts)[*count -1].email, email, MAX_FIELD_LENGTH - 1);
+    strncpy((*contacts)[*count -1].phoneNbr, phoneNbr, MAX_FIELD_LENGTH - 1);
+
+
+    fprintf(*fp, "%s,%s,%s\n", (*contacts)[*count - 1].name, (*contacts)[*count - 1].email, (*contacts)[*count - 1].phoneNbr);
+
     free(input);
     return 1;
 }
