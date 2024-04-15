@@ -15,6 +15,7 @@ int print_usage(char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
+    printf("beginning\n");
     int c;
     int count = 0;
     FILE *fp;
@@ -26,7 +27,7 @@ int main(int argc, char *argv[]) {
     bool newFile = false;
 
     struct contact_t *contacts = NULL;
-
+    printf("after struct init\n");
     while ((c = getopt(argc, argv, "nf:a:u:r:")) != -1) {
         switch(c) {
             case 'n':
@@ -65,6 +66,7 @@ int main(int argc, char *argv[]) {
             return STATUS_ERROR;
         }
     } else {
+        printf("before open file\n");
         open_contact_file(filepath, &contacts, &fp, &count);
         // null check contacts as well
         if (fp == NULL) {

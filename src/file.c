@@ -18,7 +18,7 @@ void create_contact_file(char *filepath, FILE **fp) {
         return;
     }
 
-    *fp = fopen(filepath, "w");
+    *fp = fopen(filepath, "w+x");
     if (*fp == NULL) {
         perror("open");
         fclose(*fp);
@@ -26,11 +26,12 @@ void create_contact_file(char *filepath, FILE **fp) {
     }
 }
 
+// I think I might need a function that looks at the flags that get sent from the command line and sets the file open mode accordingly
 void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, int *count) {
     char line[MAX_LINE_LENGTH];
     int i = 0;
     *fp = fopen(filepath, "r+");
-
+    
     if (*fp == NULL) {
         perror("open");
         fclose(*fp);
@@ -39,7 +40,8 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, i
     while(fgets(line, sizeof(line), *fp) != NULL) {
         (*count)++;
     }
-    *contacts = malloc(*count * sizeof(struct contact_t));
+
+    *contacts = malloc((*count) * sizeof(struct contact_t));
     if (*contacts == NULL) {
         perror("malloc");
         fclose(*fp);
@@ -73,19 +75,19 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, i
         }
 
         if (name != NULL) {
-            strncpy(contacts[i]->name, name, MAX_FIELD_LENGTH);
+            strncpy((*contacts)[i].name, name, MAX_FIELD_LENGTH);
         }
 
         if (email != NULL) {
-            strncpy(contacts[i]->email, email, MAX_FIELD_LENGTH);
+            strncpy((*contacts)[i].email, email, MAX_FIELD_LENGTH);
         }
 
         if (phoneNbr != NULL) {
-            strncpy(contacts[i]->phoneNbr, phoneNbr, MAX_FIELD_LENGTH);
+            strncpy((*contacts)[i].phoneNbr, phoneNbr, MAX_FIELD_LENGTH);
         }
 
-        free(line_copy);
         i++;
+        free(line_copy);
     }
 }
 

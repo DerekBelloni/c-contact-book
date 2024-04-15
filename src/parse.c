@@ -8,7 +8,6 @@
 #define MAX_FIELD_LENGTH 256
 
 int add_contact(struct contact_t **contacts, char *addstring, char *filepath, FILE **fp, int *count) {
-    
     char *name, *email, *phoneNbr;
     char *input = strdup(addstring);
     char *token;
@@ -29,6 +28,7 @@ int add_contact(struct contact_t **contacts, char *addstring, char *filepath, FI
     }
 
     (*count)++;
+
     struct contact_t *temp = realloc(*contacts, *count * sizeof(struct contact_t));
     if (temp == NULL) {
         perror("Memory reallocation failed");
