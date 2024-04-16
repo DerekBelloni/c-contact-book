@@ -2,8 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 
 #include "parse.h"
+#include "common.h"
 
 #define MAX_FIELD_LENGTH 256
 
@@ -50,7 +52,43 @@ int add_contact(struct contact_t **contacts, char *addstring, char *filepath, FI
 
 
     fprintf(*fp, "%s,%s,%s\n", (*contacts)[*count - 1].name, (*contacts)[*count - 1].email, (*contacts)[*count - 1].phoneNbr);
-
+    fflush(*fp);
     free(input);
-    return 1;
+    return STATUS_SUCCESS;
+}
+
+int remove_contact(struct contact_t **contacts, char *removeString, char *filepath, FILE **fp, int *count) {
+    int i, j, removed;
+
+    for (i = 0; i < *count; i++) {
+        if (strcmp((*contacts)[i].name, removeString) == 0) {
+            printf("Names match: %s\n", (*contacts)[i].name);
+            for (j = i; j < *count - 1; j++) {
+                (*contacts)[j] = (*contacts)[j + 1];
+            }
+            (*count)--; 
+            removed = 1;
+            break;
+        }
+    }
+
+    if (removed) {
+        printf("count: %d\n", *count);
+        *contacts = realloc(*contacts, (*count) * sizeof(struct contact_t));
+        if (*contacts == NULL) {
+            printf("Memory reallocation failed.\n");
+            return STATUS_ERROR;
+        }
+        rewind(*fp);
+        for (i = 0; i < *count; i++) {
+            fprintf(*fp, "%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
+        }
+        fflush(*fp);
+        if (ftruncate(fileno(*fp), ftell(*fp)) != 0) {
+            printf("Failed to truncate the file.\n");
+            return STATUS_ERROR;
+        }
+        return STATUS_SUCCESS;
+    }
+    return STATUS_ERROR;
 }

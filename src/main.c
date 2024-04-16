@@ -15,7 +15,6 @@ int print_usage(char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-    printf("beginning\n");
     int c;
     int count = 0;
     FILE *fp;
@@ -27,7 +26,7 @@ int main(int argc, char *argv[]) {
     bool newFile = false;
 
     struct contact_t *contacts = NULL;
-    printf("after struct init\n");
+
     while ((c = getopt(argc, argv, "nf:a:u:r:")) != -1) {
         switch(c) {
             case 'n':
@@ -44,6 +43,7 @@ int main(int argc, char *argv[]) {
                 break;
             case 'r':
                 removeString = optarg;
+                break;
             case '?':
                 printf("Uknown option -%c\n", c);
                 break;
@@ -51,7 +51,7 @@ int main(int argc, char *argv[]) {
                 return -1;
         }
     }
-
+    printf("here\n");
     if (filepath == NULL) {
         printf("Filepath is a required argument\n");
         print_usage(argv);
@@ -66,7 +66,6 @@ int main(int argc, char *argv[]) {
             return STATUS_ERROR;
         }
     } else {
-        printf("before open file\n");
         open_contact_file(filepath, &contacts, &fp, &count);
         // null check contacts as well
         if (fp == NULL) {
@@ -77,8 +76,20 @@ int main(int argc, char *argv[]) {
     }
 
     if (addString) {
-        add_contact(&contacts, addString, filepath, &fp, &count);
+       if (add_contact(&contacts, addString, filepath, &fp, &count) != STATUS_SUCCESS) {
+            printf("Error adding new contact.\n");
+            fclose(fp);
+            return STATUS_ERROR;
+       }
     }
 
+    if (removeString) {
+        if (remove_contact(&contacts, removeString, filepath, &fp, &count) != STATUS_SUCCESS) {
+            printf("Error removing contact.\n");
+            fclose(fp);
+            return STATUS_ERROR;
+        }
+    }
+ 
     return 0;
 }
