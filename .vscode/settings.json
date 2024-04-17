@@ -5,6 +5,7 @@
         "stdbool.h": "c",
         "typeinfo": "c",
         "__bit_reference": "c",
-        "bitset": "c"
+        "bitset": "c",
+        "file.h": "c"
     }
 }

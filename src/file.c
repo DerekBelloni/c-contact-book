@@ -63,7 +63,7 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, i
         if (token != NULL && token[0] != '\0') {
             name = strdup(token);
         }
-        printf("here too\n");
+        
         token = strsep(&line_copy, ",");
         if (token != NULL && token[0] != '\0') {
             email = strdup(token);
@@ -87,10 +87,6 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, i
         }
 
         i++;
-        // free(name);
-        // free(email);
-        // free(phoneNbr);
-        free(line_copy);
     }
 }
 

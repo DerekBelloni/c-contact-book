@@ -60,11 +60,13 @@ int add_contact(struct contact_t **contacts, char *addstring, char *filepath, FI
 int remove_contact(struct contact_t **contacts, char *removeString, char *filepath, FILE **fp, int *count) {
     int i, j, removed;
 
-    for (i = 0; i < *count; i++) {
+    for (i = 0; i < (*count); i++) {
         if (strcmp((*contacts)[i].name, removeString) == 0) {
-            printf("Names match: %s\n", (*contacts)[i].name);
-            for (j = i; j < *count - 1; j++) {
+            printf("Inside second for loop\n");
+            for (j = i; j < (*count) - 1; j++) {
+                printf("Mango\n");
                 (*contacts)[j] = (*contacts)[j + 1];
+                printf("Contacts at j after shift: %s,%s,%s\n", (*contacts)[j].name, (*contacts)[j].email, (*contacts)[j].phoneNbr);
             }
             (*count)--; 
             removed = 1;
@@ -79,15 +81,24 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
             printf("Memory reallocation failed.\n");
             return STATUS_ERROR;
         }
-        rewind(*fp);
-        for (i = 0; i < *count; i++) {
-            fprintf(*fp, "%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
-        }
-        fflush(*fp);
-        if (ftruncate(fileno(*fp), ftell(*fp)) != 0) {
-            printf("Failed to truncate the file.\n");
+
+        // rewind(*fp);
+        fclose(*fp);
+        *fp = fopen(filepath, "w");
+        if (*fp == NULL) {
+            printf("Failed to open file for writing.\\n");
             return STATUS_ERROR;
         }
+        if ((*count) > 0) {
+            for (i = 0; i < *count; i++) {
+                fprintf(*fp, "%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
+                // printf("%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
+            }
+        } else {
+            fprintf(*fp, "\\n");
+        }
+
+        fflush(*fp);
         return STATUS_SUCCESS;
     }
     return STATUS_ERROR;
