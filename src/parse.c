@@ -62,9 +62,7 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
 
     for (i = 0; i < (*count); i++) {
         if (strcmp((*contacts)[i].name, removeString) == 0) {
-            printf("Inside second for loop\n");
             for (j = i; j < (*count) - 1; j++) {
-                printf("Mango\n");
                 (*contacts)[j] = (*contacts)[j + 1];
                 printf("Contacts at j after shift: %s,%s,%s\n", (*contacts)[j].name, (*contacts)[j].email, (*contacts)[j].phoneNbr);
             }
@@ -75,14 +73,12 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
     }
 
     if (removed) {
-        printf("count: %d\n", *count);
         *contacts = realloc(*contacts, (*count) * sizeof(struct contact_t));
         if (*contacts == NULL) {
             printf("Memory reallocation failed.\n");
             return STATUS_ERROR;
         }
 
-        // rewind(*fp);
         fclose(*fp);
         *fp = fopen(filepath, "w");
         if (*fp == NULL) {
@@ -92,7 +88,6 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
         if ((*count) > 0) {
             for (i = 0; i < *count; i++) {
                 fprintf(*fp, "%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
-                // printf("%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
             }
         } else {
             fprintf(*fp, "\\n");
