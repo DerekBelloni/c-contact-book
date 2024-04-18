@@ -8,6 +8,7 @@
 #include "common.h"
 
 #define MAX_FIELD_LENGTH 256
+#define MAX_LINE_LENGTH 771 
 
 int add_contact(struct contact_t **contacts, char *addstring, char *filepath, FILE **fp, int *count) {
     char *name, *email, *phoneNbr;
@@ -68,6 +69,7 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
                 *contacts = NULL;
                 removed = 1;
             } else {
+                printf("why!!?\n");
                 for (j = i; j < (*count) - 1; j++) {
                     (*contacts)[j] = (*contacts)[j + 1];
                     printf("Contacts at j after shift: %s,%s,%s\n", (*contacts)[j].name, (*contacts)[j].email, (*contacts)[j].phoneNbr);
@@ -86,10 +88,6 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
             return STATUS_ERROR;
         }
 
-        for (i = 0; i < (*count); i++) {
-            printf("test %s,%s,%s", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
-        }
-
         fclose(*fp);
         *fp = fopen(filepath, "w");
         if (*fp == NULL) {
@@ -99,16 +97,26 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
 
         if ((*count) > 0) {
             for (i = 0; i < (*count); i++) {
+                printf("Writing contact: %s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
                 fprintf(*fp, "%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
             }
-            // create a new function that loops over the file and removes empty lines
-        } else {
-            fprintf(*fp, "");
-        }
-
+        } 
         fflush(*fp);
+        rewind(*fp);
         fclose(*fp);
+        remove_empty_lines(filepath);
         return STATUS_SUCCESS;
     }
     return STATUS_ERROR;
+}
+
+void remove_empty_lines(char *filepath) {
+    printf("filepath: %s\n", filepath);
+    // char line[MAX_LINE_LENGTH];
+    // int i = 0;
+    // printf("file pointer: %p\n", (void*)fp);
+    // while(fgets(line, sizeof(line), fp) != NULL) {
+    //     printf("Line: %s\n", line);
+    //     i++;
+    // }
 }

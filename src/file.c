@@ -57,10 +57,10 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, i
         char *token;
         char *line_copy = strdup(line);
 
-        char *newline = strchr(line, '\n');
-        if (newline != NULL) {
-            *newline = '\0';
-        }
+        // char *newline = strchr(line, '\n');
+        // if (newline != NULL) {
+        //     *newline = '\0';
+        // }
 
         token = strsep(&line_copy, ",");
         if (token != NULL && token[0] != '\0') {
@@ -91,5 +91,6 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, i
 
         i++;
     }
+    // Print out 
 }
 
