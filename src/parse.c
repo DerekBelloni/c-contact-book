@@ -101,6 +101,7 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
             for (i = 0; i < (*count); i++) {
                 fprintf(*fp, "%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
             }
+            // create a new function that loops over the file and removes empty lines
         } else {
             fprintf(*fp, "");
         }
