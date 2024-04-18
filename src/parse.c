@@ -62,13 +62,20 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
 
     for (i = 0; i < (*count); i++) {
         if (strcmp((*contacts)[i].name, removeString) == 0) {
-            for (j = i; j < (*count) - 1; j++) {
-                (*contacts)[j] = (*contacts)[j + 1];
-                printf("Contacts at j after shift: %s,%s,%s\n", (*contacts)[j].name, (*contacts)[j].email, (*contacts)[j].phoneNbr);
+            if ((*count) == 1) {
+                (*count) = 0;
+                free(*contacts);
+                *contacts = NULL;
+                removed = 1;
+            } else {
+                for (j = i; j < (*count) - 1; j++) {
+                    (*contacts)[j] = (*contacts)[j + 1];
+                    printf("Contacts at j after shift: %s,%s,%s\n", (*contacts)[j].name, (*contacts)[j].email, (*contacts)[j].phoneNbr);
+                }
+                (*count)--; 
+                removed = 1;
+                break;
             }
-            (*count)--; 
-            removed = 1;
-            break;
         }
     }
 
@@ -79,21 +86,27 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
             return STATUS_ERROR;
         }
 
+        for (i = 0; i < (*count); i++) {
+            printf("test %s,%s,%s", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
+        }
+
         fclose(*fp);
         *fp = fopen(filepath, "w");
         if (*fp == NULL) {
-            printf("Failed to open file for writing.\\n");
+            printf("Failed to open file for writing.\n");
             return STATUS_ERROR;
         }
+
         if ((*count) > 0) {
-            for (i = 0; i < *count; i++) {
+            for (i = 0; i < (*count); i++) {
                 fprintf(*fp, "%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
             }
         } else {
-            fprintf(*fp, "\\n");
+            fprintf(*fp, "");
         }
 
         fflush(*fp);
+        fclose(*fp);
         return STATUS_SUCCESS;
     }
     return STATUS_ERROR;

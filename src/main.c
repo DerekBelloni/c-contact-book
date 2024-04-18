@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <ctype.h>
+#include <string.h>
 
 #include "common.h"
 #include "file.h"
@@ -23,6 +24,7 @@ int main(int argc, char *argv[]) {
     char *updateString = NULL;
     char *addString = NULL;
     char *removeString = NULL;
+    char *file_mode = NULL;
     bool newFile = false;
 
     struct contact_t *contacts = NULL;
@@ -51,7 +53,7 @@ int main(int argc, char *argv[]) {
                 return -1;
         }
     }
-    printf("here\n");
+ 
     if (filepath == NULL) {
         printf("Filepath is a required argument\n");
         print_usage(argv);
@@ -66,13 +68,15 @@ int main(int argc, char *argv[]) {
             return STATUS_ERROR;
         }
     } else {
-        open_contact_file(filepath, &contacts, &fp, &count);
+        file_mode = strdup("r+");
+        open_contact_file(filepath, &contacts, &fp, &count, file_mode);
         // null check contacts as well
         if (fp == NULL) {
             printf("Unable to open file.\n");
             fclose(fp);
             return STATUS_ERROR;
         }
+        printf("count on file open: %d\n", count);
     }
 
     if (addString) {
@@ -81,6 +85,7 @@ int main(int argc, char *argv[]) {
             fclose(fp);
             return STATUS_ERROR;
        }
+       printf("count after add: %d\n", count);
     }
 
     if (removeString) {
@@ -89,6 +94,7 @@ int main(int argc, char *argv[]) {
             fclose(fp);
             return STATUS_ERROR;
         }
+       printf("count after remove: %d\n", count);
     }
  
     return 0;

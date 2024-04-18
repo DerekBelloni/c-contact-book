@@ -27,10 +27,10 @@ void create_contact_file(char *filepath, FILE **fp) {
 }
 
 // I think I might need a function that looks at the flags that get sent from the command line and sets the file open mode accordingly
-void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, int *count) {
+void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, int *count, char *file_mode) {
     char line[MAX_LINE_LENGTH];
     int i = 0;
-    *fp = fopen(filepath, "r+");
+    *fp = fopen(filepath, file_mode);
     
     if (*fp == NULL) {
         perror("open");
@@ -38,6 +38,9 @@ void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, i
     }
 
     while(fgets(line, sizeof(line), *fp) != NULL) {
+        if (strcmp(line, "\n") == 0 || strcmp(line, "\r\n") == 0) {
+            continue;
+        }
         (*count)++;
     }
 
