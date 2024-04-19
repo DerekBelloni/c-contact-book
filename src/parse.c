@@ -51,7 +51,6 @@ int add_contact(struct contact_t **contacts, char *addstring, char *filepath, FI
     strncpy((*contacts)[*count -1].email, email, MAX_FIELD_LENGTH - 1);
     strncpy((*contacts)[*count -1].phoneNbr, phoneNbr, MAX_FIELD_LENGTH - 1);
 
-
     fprintf(*fp, "%s,%s,%s\n", (*contacts)[*count - 1].name, (*contacts)[*count - 1].email, (*contacts)[*count - 1].phoneNbr);
     fflush(*fp);
     free(input);
@@ -110,12 +109,11 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
 int list_contacts(struct contact_t **contacts, FILE **fp, int *count)
 {
     int i = 0;
-    printf("Here are your contacts: \n\n");
     for (i = 0; i < *count; i++) {
-        printf("Contact %d:\n", i + 1);
+        printf("\nContact %d:\n", i + 1);
         printf("Name: %s\n", (*contacts)[i].name);
         printf("Email: %s\n", (*contacts)[i].email);
-        printf("Phone Number: %s\n\n", (*contacts)[i].phoneNbr);
+        printf("Phone Number: %s\n", (*contacts)[i].phoneNbr);
     }
 
     fclose(*fp);
