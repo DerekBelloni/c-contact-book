@@ -102,8 +102,22 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
         fflush(*fp);
         rewind(*fp);
         fclose(*fp);
-        remove_empty_lines(filepath);
         return STATUS_SUCCESS;
     }
     return STATUS_ERROR;
+}
+
+int list_contacts(struct contact_t **contacts, FILE **fp, int *count)
+{
+    int i = 0;
+    printf("Here are your contacts: \n\n");
+    for (i = 0; i < *count; i++) {
+        printf("Contact %d:\n", i + 1);
+        printf("Name: %s\n", (*contacts)[i].name);
+        printf("Email: %s\n", (*contacts)[i].email);
+        printf("Phone Number: %s\n\n", (*contacts)[i].phoneNbr);
+    }
+
+    fclose(*fp);
+    return STATUS_SUCCESS;
 }
