@@ -8,6 +8,8 @@
         "bitset": "c",
         "file.h": "c",
         "stdlib.h": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "common.h": "c",
+        "locale": "c"
     }
 }

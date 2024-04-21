@@ -11,6 +11,7 @@ struct contact_t {
 };
 
 int add_contact(struct contact_t **, char *addstring, char *filepath, FILE **fp, int *count);
+int update_contact(struct contact_t **, char *addstring, char *filepath, FILE **fp, int *count);
 int remove_contact(struct contact_t **, char *removeString, char *filepath, FILE **fp, int *count);
 int list_contacts(struct contact_t **, FILE **fp, int *count);
 

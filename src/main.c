@@ -12,6 +12,9 @@
 
 int print_usage(char *argv[]) {
     printf("Usage: %s -p <filepath> -f <filename>\n", argv[0]);
+    printf("To add a contact use -a <name,email,phoneNbr>\n");
+    printf("To remove a contact use -r <name>\n");
+    printf("To update a contact use -u <field_to_update,replacement_data,data_to_replace>\n");
     return 1;
 }
 
@@ -89,6 +92,16 @@ int main(int argc, char *argv[]) {
        }
     }
 
+    // needs to be closed to new files
+    if (updateString) {
+        if (update_contact(&contacts, updateString, filepath, &fp, &count) != STATUS_SUCCESS) {
+            printf("Error updating contact.\n");
+            fclose(fp);
+            return STATUS_ERROR;
+        }
+    }
+
+    // needs to be closed to new files
     if (removeString) {
         if (remove_contact(&contacts, removeString, filepath, &fp, &count) != STATUS_SUCCESS) {
             printf("Error removing contact.\n");
@@ -97,7 +110,9 @@ int main(int argc, char *argv[]) {
         }
     }
 
+    // needs to be closed to new files
     if (listContacts) {
+        // check count, if 0 print an error
         if (list_contacts(&contacts, &fp, &count) != STATUS_SUCCESS) {
             printf("Error listing contacts.\n");
             fclose(fp);

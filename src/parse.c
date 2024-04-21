@@ -57,6 +57,66 @@ int add_contact(struct contact_t **contacts, char *addstring, char *filepath, FI
     return STATUS_SUCCESS;
 }
 
+int update_contact(struct contact_t **contacts, char *updateString, char *filepath, FILE **fp, int *count) {
+    char *field, *replacement, *toBeReplaced;
+    char *input = strdup(updateString);
+    char *token;
+    int i;
+    // need to send in the field to be updated and what to update it with
+    token = strsep(&input, ",");
+    if (token != NULL && token[0] != '\0') {
+        field = strdup(token);
+    }
+    
+    token = strsep(&input, ",");
+    if (token != NULL && token[0] != '\0') {
+        replacement = strdup(token);
+    }
+    
+    token = strsep(&input, ",");
+    if (token != NULL && token[0] != '\0') {
+        toBeReplaced = strdup(token);
+    }
+    printf("handed in: %s,%s,%s\n", field, replacement, toBeReplaced);
+    for (i = 0; i < (*count); i++) {
+        if (strcmp(field, "name") == 0) {
+            if (strcmp((*contacts)[i].name, toBeReplaced) == 0) {
+                strncpy((*contacts)[i].name, replacement, MAX_FIELD_LENGTH - 1);
+            }       
+        } else if (strcmp(field, "email") == 0) {
+            printf("here\n");
+            if (strcmp((*contacts)[i].email, toBeReplaced) == 0) {
+                printf("and here\n");
+                strncpy((*contacts)[i].email, replacement, MAX_FIELD_LENGTH - 1);
+            }
+        } else if (strcmp(field, "phoneNbr") == 0) {
+            if (strcmp((*contacts)[i].phoneNbr, toBeReplaced) == 0) {
+                strncpy((*contacts)[i].phoneNbr, replacement, MAX_FIELD_LENGTH -1);
+            }
+        }
+    }
+
+    *contacts = realloc(*contacts, (*count) * sizeof(struct contact_t));
+    if (*contacts == NULL) {
+        printf("Memory reallocation failed.\n");
+        return STATUS_ERROR;
+    }
+
+    fclose(*fp);
+    *fp = fopen(filepath, "w");
+    if (*fp == NULL) {
+        printf("Failed to open file for writing.\n");
+    }
+
+    for (i = 0; i < (*count); i++) {
+        fprintf(*fp, "%s,%s,%s\n", (*contacts)[i].name, (*contacts)[i].email, (*contacts)[i].phoneNbr);
+    }
+
+    fflush(*fp);
+    fclose(*fp);
+    return STATUS_SUCCESS;
+}
+
 int remove_contact(struct contact_t **contacts, char *removeString, char *filepath, FILE **fp, int *count) {
     int i, j, removed;
 
@@ -70,7 +130,6 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
             } else {
                 for (j = i; j < (*count) - 1; j++) {
                     (*contacts)[j] = (*contacts)[j + 1];
-                    printf("Contacts at j after shift: %s,%s,%s\n", (*contacts)[j].name, (*contacts)[j].email, (*contacts)[j].phoneNbr);
                 }
                 (*count)--; 
                 removed = 1;
@@ -99,7 +158,6 @@ int remove_contact(struct contact_t **contacts, char *removeString, char *filepa
             }
         } 
         fflush(*fp);
-        rewind(*fp);
         fclose(*fp);
         return STATUS_SUCCESS;
     }
