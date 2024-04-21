@@ -92,29 +92,37 @@ int main(int argc, char *argv[]) {
        }
     }
 
-    // needs to be closed to new files
-    if (updateString) {
+    if (updateString && !newFile) {
         if (update_contact(&contacts, updateString, filepath, &fp, &count) != STATUS_SUCCESS) {
             printf("Error updating contact.\n");
             fclose(fp);
             return STATUS_ERROR;
         }
+    } else {
+        printf("Can't update contacts in a new file.\n");
+        fclose(fp);
+        return STATUS_ERROR;
     }
 
-    // needs to be closed to new files
-    if (removeString) {
+    if (removeString && !newFile) {
         if (remove_contact(&contacts, removeString, filepath, &fp, &count) != STATUS_SUCCESS) {
             printf("Error removing contact.\n");
             fclose(fp);
             return STATUS_ERROR;
         }
+    } else {
+        printf("Can't remove contacts from a new file.\n");
+        fclose(fp);
+        return STATUS_ERROR;
     }
 
-    // needs to be closed to new files
-    if (listContacts) {
-        // check count, if 0 print an error
+    if (listContacts && !newFile) {
         if (list_contacts(&contacts, &fp, &count) != STATUS_SUCCESS) {
             printf("Error listing contacts.\n");
+            fclose(fp);
+            return STATUS_ERROR;
+        } else {
+            printf("Can't list contacts in a new file.\n");
             fclose(fp);
             return STATUS_ERROR;
         }

@@ -62,7 +62,7 @@ int update_contact(struct contact_t **contacts, char *updateString, char *filepa
     char *input = strdup(updateString);
     char *token;
     int i;
-    // need to send in the field to be updated and what to update it with
+
     token = strsep(&input, ",");
     if (token != NULL && token[0] != '\0') {
         field = strdup(token);

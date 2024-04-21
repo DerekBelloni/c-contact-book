@@ -8,7 +8,6 @@
 
 #define MAX_LINE_LENGTH 771 
 
-// refactor this to be a void type, hand in a pointer to fp (**fp)
 void create_contact_file(char *filepath, FILE **fp) {
     *fp = fopen(filepath, "r");
 
@@ -26,7 +25,6 @@ void create_contact_file(char *filepath, FILE **fp) {
     }
 }
 
-// I think I might need a function that looks at the flags that get sent from the command line and sets the file open mode accordingly
 void open_contact_file(char *filepath, struct contact_t **contacts, FILE **fp, int *count, char *file_mode) {
     char line[MAX_LINE_LENGTH];
     int i = 0;
