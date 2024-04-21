@@ -77,14 +77,13 @@ int update_contact(struct contact_t **contacts, char *updateString, char *filepa
     if (token != NULL && token[0] != '\0') {
         toBeReplaced = strdup(token);
     }
-    printf("handed in: %s,%s,%s\n", field, replacement, toBeReplaced);
+
     for (i = 0; i < (*count); i++) {
         if (strcmp(field, "name") == 0) {
             if (strcmp((*contacts)[i].name, toBeReplaced) == 0) {
                 strncpy((*contacts)[i].name, replacement, MAX_FIELD_LENGTH - 1);
             }       
         } else if (strcmp(field, "email") == 0) {
-            printf("here\n");
             if (strcmp((*contacts)[i].email, toBeReplaced) == 0) {
                 printf("and here\n");
                 strncpy((*contacts)[i].email, replacement, MAX_FIELD_LENGTH - 1);
